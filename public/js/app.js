@@ -47786,7 +47786,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             template: '',
             info: [],
-            logo: "http://localhost/oficios/public/img/logo.png",
+            logo: "http://localhost/oficios2/public/img/logo.png",
             editable: false
         };
     },
@@ -47806,9 +47806,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getTemplate: function getTemplate() {
             var _this = this;
 
-            var urlTemplate = 'actas';
+            var urlTemplate = 'http://localhost/oficios2/public/actas';
             var urlPeticion = this.url;
             axios.post(urlTemplate, {
+                headers: {
+                    'Access-Control-Allow-Origin': 'http://uat2.oo'
+                },
                 tipo: this.tipo
             }).then(function (response) {
                 _this.template = response.data[0]['html'];
