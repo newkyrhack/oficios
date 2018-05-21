@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Oficio extends Model
 {
-    protected $table = 'oficios';
+    protected $table = 'oficios_hechos';
     protected $fillable = [
         'id',
         'html',
-        'tipo',
-        'id_tipo'
+        'token',
+        'fiscal',
+        'idOficio'
     ];
 }

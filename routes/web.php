@@ -13,3 +13,5 @@
 Route::post('actas', 'OficioController@actas')->name('actas');
 Route::get('prueba', 'OficioController@prueba')->name('prueba');
 Route::get('getoficioah/{id}', 'ActasHechosController@getoficioah');
+Route::post('getToken', 'OficioController@getToken')->name('getToken');
+Route::post('saveOficio', 'OficioController@saveOficio')->name('saveOficio');

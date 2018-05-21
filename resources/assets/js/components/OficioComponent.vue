@@ -1,6 +1,6 @@
 <template>
     <div class="contenedor">
-        <table class="editable" v-on:click="editar" v-on:focusout="fijo" :contenteditable="editable">
+        <table class="editable" v-on:click="editar" v-on:focusout="fijo" >
             <tr class="font16 padding">
                 <td>
                     <img :src="logo" alt="" style="height:150px">
@@ -69,25 +69,27 @@
                     </div>
                 </td>
                 <td>
-                    <div id="qr" style="text-align:center"></div>
-                    <div class="num"></div>
+                    <canvas ref="canvas" id="qr"></canvas>
                 </td>
             </tr>
         </table>
         <div id="imprimir">
-            <input type="button" value="Imprimir" id="imprimir" class="impre btn btn-basic btn-outline-dark"> 
+            <input type="button" value="Imprimir" id="imprimir" class="impre btn btn-basic btn-outline-dark" v-on:click="imprimir"> 
         </div>
     </div>
 </template>
 
 <script>
+import QRCode from 'qrcode'
     export default {
         data(){
             return{
-                template:``,
+                template:'',
+                tipoOficio:'',
                 info:[],
+                variables:[],
                 logo:"http://localhost/oficios2/public/img/logo.png",
-                editable:false
+                token:''
             }
         },
          props:{
@@ -106,12 +108,10 @@
                 var urlTemplate = 'http://localhost/oficios2/public/actas';
                 var urlPeticion = this.url;
                 axios.post(urlTemplate,{
-                    headers: {
-                    'Access-Control-Allow-Origin': 'http://uat2.oo',
-                    },
                     tipo:this.tipo
                 }).then(response => {
                     this.template = response.data[0]['html'];
+                    this.tipoOficio = response.data[0]['id'];
                     axios.get(urlPeticion).then(response => {
                         this.info = response.data;
                         this.setData();
@@ -120,7 +120,6 @@
             },
             setData: function(){
                 var res = this.template.split("{{$");
-                //console.log(res);
                 let list=[];
                 let template = this.template;
                 let info = this.info;
@@ -131,15 +130,36 @@
                     }
                 });
                 list.map(function(value,key){
-                    template = template.replace("{{$"+value+"}}",info[value]);
+                    template = template.replace("{{$"+value+"}}","<span class='noeditable "+value+"'>"+info[value]+"</span>");
                 });
+                this.variables = list;
                 this.template = template;
             },
             editar: function(){
-                this.editable = true;
+                $(".editable").attr("contenteditable", true);
+                $(".noeditable").attr('contenteditable', 'false');
             },
             fijo: function(){
-                this.editable = false;
+                $(".editable").removeAttr("contenteditable");
+            },
+            imprimir: function(){
+                let info = this.info;
+                this.variables.map(function(value,key){
+                    $("."+value).text(info[value]);
+                });
+                axios.post("getToken").then(response => {
+                    this.token = response.data;
+                    QRCode.toCanvas(this.$refs.canvas, this.token)
+                    axios.post("saveOficio",{
+                        "html" : $(".editable").html(),
+                        "token": this.token,
+                        "fiscal" : info['fiscal'],
+                        "id_oficio": this.tipoOficio,
+                    }).then(response => {
+                        window.print();
+                        this.$refs.canvas.width=this.$refs.canvas.width;
+                    });
+                });
             }
        }
     }
