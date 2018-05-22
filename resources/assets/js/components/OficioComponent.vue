@@ -88,6 +88,7 @@ import QRCode from 'qrcode'
                 tipoOficio:'',
                 info:[],
                 variables:[],
+                bloqueados:[],
                 logo:"http://localhost/oficios2/public/img/logo.png",
                 token:''
             }
@@ -129,11 +130,22 @@ import QRCode from 'qrcode'
                         list.push(res2[0]);
                     }
                 });
+                let protegidos=[];
+                let tag = '';
                 list.map(function(value,key){
-                    template = template.replace("{{$"+value+"}}","<span class='noeditable "+value+"'>"+info[value]+"</span>");
+                    if(protegidos.indexOf(value)!= -1){
+                        tag = value+"1";
+                        protegidos.push(tag);
+                    }
+                    else{
+                        tag = value;
+                        protegidos.push(tag);
+                    }
+                    template = template.replace("{{$"+value+"}}","<span class='noeditable "+tag+"' id='"+tag+"'>"+info[value]+"</span>");
                 });
                 this.variables = list;
                 this.template = template;
+                this.bloqueados = protegidos;
             },
             editar: function(){
                 $(".editable").attr("contenteditable", true);
@@ -144,22 +156,39 @@ import QRCode from 'qrcode'
             },
             imprimir: function(){
                 let info = this.info;
-                this.variables.map(function(value,key){
-                    $("."+value).text(info[value]);
+                var correcto = true;
+                this.bloqueados.map(function(value,key){
+                    if ( $("#"+value).length <= 0 ){
+                        correcto = false;
+                    }  
                 });
-                axios.post("getToken").then(response => {
-                    this.token = response.data;
-                    QRCode.toCanvas(this.$refs.canvas, this.token)
-                    axios.post("saveOficio",{
+                if(correcto){
+                    this.variables.map(function(value,key){
+                        $("."+value).text(info[value]);
+                    });
+                    axios.post("getToken").then(response => {
+                        this.token = response.data;
+                        QRCode.toCanvas(this.$refs.canvas, this.token)
+                        axios.post("saveOficio",{
+                            "html" : $(".editable").html(),
+                            "token": this.token,
+                            "fiscal" : info['fiscal'],
+                            "id_oficio": this.tipoOficio,
+                        }).then(response => {
+                            window.print();
+                            this.$refs.canvas.width=this.$refs.canvas.width;
+                        });
+                    });
+                }
+                else{
+                    axios.post("intentos",{
                         "html" : $(".editable").html(),
-                        "token": this.token,
                         "fiscal" : info['fiscal'],
                         "id_oficio": this.tipoOficio,
                     }).then(response => {
-                        window.print();
-                        this.$refs.canvas.width=this.$refs.canvas.width;
                     });
-                });
+                }
+                
             }
        }
     }
