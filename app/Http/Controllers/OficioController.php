@@ -9,7 +9,7 @@ use DB;
 
 class OficioController extends Controller
 {
-    public function actas(Request $request){
+    public function oficios(Request $request){
         //echo $request->tipo;
         $templates = DB::table('templates')
         ->join('oficios', 'templates.idOficio', '=', 'oficios.id')

@@ -15196,7 +15196,7 @@ window.Popper = __webpack_require__(9).default;
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(10);
+  //window.$ = window.jQuery = require('jquery');
 
   __webpack_require__(25);
 } catch (e) {}
@@ -50281,17 +50281,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getTemplate: function getTemplate() {
             var _this = this;
 
-            var urlTemplate = 'http://localhost/oficios2/public/actas';
+            var urlTemplate = '../oficios';
             var urlPeticion = this.url;
             axios.post(urlTemplate, {
                 tipo: this.tipo
             }).then(function (response) {
-                _this.template = response.data[0]['html'];
-                _this.tipoOficio = response.data[0]['id'];
-                axios.get(urlPeticion).then(function (response) {
-                    _this.info = response.data;
-                    _this.setData();
-                });
+                if (response.data[0] == undefined) {
+                    console.log("sin datos");
+                } else {
+                    _this.template = response.data[0]['html'];
+                    _this.tipoOficio = response.data[0]['id'];
+                    axios.get(urlPeticion).then(function (response) {
+                        _this.info = response.data;
+                        _this.setData();
+                    });
+                }
             });
         },
         setData: function setData() {
@@ -50342,10 +50346,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.variables.map(function (value, key) {
                     $("." + value).text(info[value]);
                 });
-                axios.post("getToken").then(function (response) {
+                axios.post("../getToken").then(function (response) {
                     _this2.token = response.data;
                     __WEBPACK_IMPORTED_MODULE_0_qrcode___default.a.toCanvas(_this2.$refs.canvas, _this2.token);
-                    axios.post("saveOficio", {
+                    axios.post("../saveOficio", {
                         "html": $(".editable").html(),
                         "token": _this2.token,
                         "fiscal": info['fiscal'],
@@ -50356,7 +50360,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     });
                 });
             } else {
-                axios.post("intentos", {
+                axios.post("../intentos", {
                     "html": $(".editable").html(),
                     "fiscal": info['fiscal'],
                     "id_oficio": this.tipoOficio

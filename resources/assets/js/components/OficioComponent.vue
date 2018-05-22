@@ -106,17 +106,23 @@ import QRCode from 'qrcode'
         },
         methods:{
             getTemplate: function(){
-                var urlTemplate = 'http://localhost/oficios2/public/actas';
+                var urlTemplate = '../oficios';
                 var urlPeticion = this.url;
                 axios.post(urlTemplate,{
                     tipo:this.tipo
                 }).then(response => {
-                    this.template = response.data[0]['html'];
-                    this.tipoOficio = response.data[0]['id'];
-                    axios.get(urlPeticion).then(response => {
-                        this.info = response.data;
-                        this.setData();
-                    });
+                    if(response.data[0]==undefined){
+                        console.log("sin datos");
+                    }
+                    else{
+                        this.template = response.data[0]['html'];
+                        this.tipoOficio = response.data[0]['id'];
+                        axios.get(urlPeticion).then(response => {
+                            this.info = response.data;
+                            this.setData();
+                        });
+                    }
+                    
                 });   
             },
             setData: function(){
@@ -166,10 +172,10 @@ import QRCode from 'qrcode'
                     this.variables.map(function(value,key){
                         $("."+value).text(info[value]);
                     });
-                    axios.post("getToken").then(response => {
+                    axios.post("../getToken").then(response => {
                         this.token = response.data;
                         QRCode.toCanvas(this.$refs.canvas, this.token)
-                        axios.post("saveOficio",{
+                        axios.post("../saveOficio",{
                             "html" : $(".editable").html(),
                             "token": this.token,
                             "fiscal" : info['fiscal'],
@@ -181,7 +187,7 @@ import QRCode from 'qrcode'
                     });
                 }
                 else{
-                    axios.post("intentos",{
+                    axios.post("../intentos",{
                         "html" : $(".editable").html(),
                         "fiscal" : info['fiscal'],
                         "id_oficio": this.tipoOficio,

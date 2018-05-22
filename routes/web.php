@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::post('actas', 'OficioController@actas')->name('actas');
+Route::post('oficios', 'OficioController@oficios')->name('oficios');
 Route::get('prueba', 'OficioController@prueba')->name('prueba');
 Route::get('getoficioah/{id}', 'ActasHechosController@getoficioah');
 Route::post('getToken', 'OficioController@getToken')->name('getToken');
