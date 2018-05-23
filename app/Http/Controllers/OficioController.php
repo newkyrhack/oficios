@@ -54,6 +54,38 @@ class OficioController extends Controller
         else{
             echo 0;
         }
-    
-}
+    }
+
+    /*Cambiar sistema por el que corresponda y la unidad por la que tenga asiganada el usuario logueado */
+    public function getOficios(){
+        $oficios = Oficio::where('unidad',1)
+        ->where('sistema','uat')
+        ->select('id','nombre')
+        ->get();
+        return response()->json($oficios);
+    }
+
+    public function getOficio(Request $request){
+        $oficio = DB::table('templates')
+        ->join('oficios', 'templates.idOficio', '=', 'oficios.id')
+        ->join('secciones_oficios', 'templates.idSeccion', '=', 'secciones_oficios.id')
+        ->where('oficios.id', $request->id)
+        ->select('secciones_oficios.html as html','secciones_oficios.id as idSeccion')
+        ->get();
+        return response()->json($oficio);
+    }
+
+    /*Cambiar sistema por el que corresponda y la unidad por la que tenga asiganada el usuario logueado */
+    public function addOficio(Request $request){
+        $oficio = new Oficio();
+        $oficio->unidad = 1;
+        $oficio->sistema = 'uat';
+        $oficio->nombre = $request->nombre;
+    }
+
+    public function updateOficio(Request $request){
+        $id = $request->id;
+        $oficio = Oficio::find('id',$id);
+        //$oficio-
+    }
 }
