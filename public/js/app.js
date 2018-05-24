@@ -50267,7 +50267,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             info: [],
             variables: [],
             bloqueados: [],
-            logo: "http://localhost/oficios2/public/img/logo.png",
+            logo: "http://gobiernoabierto.fiscaliaveracruz.gob.mx/img/logo.png",
             token: ''
         };
     },
@@ -50295,7 +50295,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (response.data[0] == undefined) {
                     console.log("sin datos");
                 } else {
-                    _this.template = response.data[0]['html'];
+                    //console.log(response.data);
+                    _this.template = response.data[0]['contenido'];
                     _this.tipoOficio = response.data[0]['id'];
                     axios.get(urlPeticion).then(function (response) {
                         _this.info = response.data;

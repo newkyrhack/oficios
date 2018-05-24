@@ -95,7 +95,7 @@ import QRCode from 'qrcode'
                 info:[],
                 variables:[],
                 bloqueados:[],
-                logo:"http://localhost/oficios2/public/img/logo.png",
+                logo:"http://gobiernoabierto.fiscaliaveracruz.gob.mx/img/logo.png",
                 token:''
             }
         },
@@ -121,7 +121,8 @@ import QRCode from 'qrcode'
                         console.log("sin datos");
                     }
                     else{
-                        this.template = response.data[0]['html'];
+                        //console.log(response.data);
+                        this.template = response.data[0]['contenido'];
                         this.tipoOficio = response.data[0]['id'];
                         axios.get(urlPeticion).then(response => {
                             this.info = response.data;
