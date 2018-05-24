@@ -513,7 +513,8 @@ class ActasHechosController extends Controller
         'narracion' => $catalogos->narracion,
         'expedido' => $catalogos->expedido,
         'edad' => $edad,
-        'id' => $id);
+        'id' => $id,
+        'img' => asset("img/logo.png"));
 
         return response()->json($data);
         // return view('impresion')
