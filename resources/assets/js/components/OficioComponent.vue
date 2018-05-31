@@ -1,6 +1,6 @@
 <template>
     <div class="contenedor">
-        <table class="editable" v-on:click="editar" v-on:focusout="fijo" >
+        <table class="editable" v-on:mouseover="editar" v-on:mouseout="fijo" >
             <thead>
                 <tr class="font16 padding">
                     <th>
@@ -20,7 +20,7 @@
                 </tr>
                 <tr class="font14">
                     <td colspan="2">
-                        <div class="justificado" v-html="template">
+                        <div id="body" class="justificado" v-html="template">
                         </div>
                     </td>
                 </tr>
@@ -87,6 +87,8 @@
 
 <script>
 import QRCode from 'qrcode'
+const { detect } = require('detect-browser');
+const browser = detect();
     export default {
         data(){
             return{
@@ -162,21 +164,28 @@ import QRCode from 'qrcode'
                         tag = value;
                         protegidos.push(tag);
                     }
-                    template = template.replace("{{$"+value+"}}","<span class='noeditable "+tag+"' id='"+tag+"'>"+info[value]+"</span>");
+                    template = template.replace("{{$"+value+"}}","</span> <span class='noeditable "+tag+"' id='"+tag+"'>"+info[value]+"</span> <span class='edt'>");
                 });
                 listimg.map(function(value,key){
                     template = template.replace("{{@"+value+"}}","<img src='"+info[value]+"'>");
                 });
+                template = "<span class='edt'>"+template+"</span>";
                 this.variables = list;
                 this.template = template;
                 this.bloqueados = protegidos;
             },
             editar: function(){
-                $(".editable").attr("contenteditable", true);
+                $(".edt").attr("contenteditable", true);
                 $(".noeditable").attr('contenteditable', 'false');
+                if (browser.name=='ie'||browser.name=='edge'){
+                    $("#body").removeClass("justificado");
+                }    
             },
             fijo: function(){
-                $(".editable").removeAttr("contenteditable");
+                $(".edt").removeAttr("contenteditable");
+                if(browser.name=='ie'||browser.name=='edge'){
+                    $("#body").addClass("justificado");
+                }  
             },
             imprimir: function(){
                 let info = this.info;
@@ -259,9 +268,11 @@ import QRCode from 'qrcode'
     .noeditable{
         font-weight: bold;
     }
-    .justificado{
+    #body{
         margin-left: 50px;
         margin-right: 50px;
+    }
+    .justificado{
         text-align : justify;
     }
     .negritas{
