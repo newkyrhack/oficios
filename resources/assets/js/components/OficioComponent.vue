@@ -2,61 +2,17 @@
     <div class="contenedor">
         <table class="editable" v-on:mouseover="editar" v-on:mouseout="fijo" >
             <thead>
-                <tr class="font16 padding">
+                <tr>
                     <th>
-                        <img :src="logo" alt="" style="height:150px">
-                    </th>
-                    <th style="padding-top:85px; width:50%; text-align:right;">
-                        Unidad de Atención Temprana, Distrito XI Xalapa, Veracruz <br>
-                        <span class="format1">“Si lo platicamos, lo solucionamos”</span>
+                        <div class="font16" v-html="encabezado" style="width:100%">
+                        </div>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="font14">
-                    <td colspan="2" style="padding-bottom:10px; text-align:center;">
-                        ACTA DE HECHOS NÚMERO <span class="noeditable">UAT-XI/AH- <span class="folio">XXXXXXFOLIO</span> /2018</span>
-                    </td>
-                </tr>
-                <tr class="font14">
                     <td colspan="2">
                         <div id="body" class="justificado" v-html="template">
-                        </div>
-                    </td>
-                </tr>
-                <tr style="text-align: center;" class="font14">
-                    <td colspan="2">Firma del Compareciente:</td>  
-                </tr>
-                <tr style="text-align: center;" class="font14">
-                    <td colspan="2">
-                        ______________________________ <br>
-                        <span class="negritas">C.</span> <span class="noeditable nombre">XXXXXXNOMBRE</span>
-                    </td>
-                </tr>
-                <tr style="text-align: center;" class="font14">
-                    <td colspan="2">
-                        __________________________________________ <br>
-                        <span class="negritas">LIC.</span> <span class="noeditable fiscal">XXXXXXFISCAL</span><br>
-                        Fiscal Sexta Orientadora de la Unidad de Atención Temprana <br>
-                        Del XI Distrito Judicial en Xalapa, Veracruz
-                    </td>
-                </tr>
-                <tr class="font10">
-                    <td colspan="2">
-                        <div class="justificado">
-                            <span class="format2"> AVISO DE PRIVACIDAD SIMPLIFICADO</span> <br>
-                            <span class="format2"> DEL EXPEDIENTE DE ATENCIÓN TEMPRANA</span> <br>
-                            <span class="negritas">La Fiscalía General del Estado de Veracruz</span>, es la responsable del tratamiento de los datos personales que nos proporcione. <br>
-                            Los datos personales que recabamos a Usted, los utilizaremos para las siguientes finalidades: <br>
-                            •	Identificar al usuario y conocer su problemática a fin de poder orientar en su caso, respecto a la procedencia del asunto expuesto, iniciando de ser procedente la Carpeta de Investigación correspondiente o por el contrario la canalización del ciudadano a la Unidad Integral de Procuración de Justicia, o alguna otra instancia competente; <br>
-                            •	Para iniciar el expediente de atención temprana, <br>
-                            •	Para la recepción de las denuncias y querellas, <br>
-                            •	Para la emisión de informes. <br>
-                            De manera adicional, utilizaremos su información personal para la siguiente finalidad que nos permite y facilita brindarle una mejor atención: <br>
-                            •	Generación de informes estadísticos. <br>
-                            En caso de que no desee que sus datos personales sean tratados para las finalidades  adicionales, Usted puede manifestarlo al correo electrónico <a href="direcciondetransparencia@fiscaliaveracruz.gob.mx">direcciondetransparencia@fiscaliaveracruz.gob.mx</a>  <br>
-                            Le informamos que sus datos personales <span class="negritas">NO</span> son compartidos con personas, empresas, organizaciones y autoridades distintas al sujeto obligado, salvo que sean necesarias para atender requerimientos de información de una autoridad competente, debidamente fundados y motivados. <br>
-                            Para mayor información acerca del tratamiento y de los derechos que puede hacer valer, usted puede acceder al aviso de privacidad integral a través de la dirección electrónica: <a href="http://fiscaliaveracruz.gob.mx"> http://fiscaliaveracruz.gob.mx </a>  
                         </div>
                     </td>
                 </tr>
@@ -64,13 +20,7 @@
             <tfoot>
                 <tr class="font13">
                     <th>
-                        <div class="justificado">
-                            Circuito Rafael Guízar y <br>
-                            Valencia No. 147, <br>
-                            Colonia Reserva Territorial, <br>
-                            C.P. 91096 <br>
-                            Teléfono: 01 (228) 8149428, <br>
-                            Xalapa-Enríquez, Veracruz
+                        <div class="justificado" v-html="pie">
                         </div>
                     </th>
                     <th>
@@ -93,6 +43,8 @@ const browser = detect();
         data(){
             return{
                 template:'',
+                encabezado:'',
+                pie:'',
                 tipoOficio:'',
                 info:[],
                 variables:[],
@@ -125,6 +77,8 @@ const browser = detect();
                     else{
                         //console.log(response.data);
                         this.template = response.data[0]['contenido'];
+                        this.encabezado = response.data[0]['encabezado'];
+                        this.pie = response.data[0]['pie'];
                         this.tipoOficio = response.data[0]['id'];
                         axios.get(urlPeticion).then(response => {
                             this.info = response.data;
