@@ -2,14 +2,17 @@
     <div class="contenedor">
         <table class="editable" v-on:mouseover="editar" v-on:mouseout="fijo" >
             <thead>
-                <tr class="font16" v-html="encabezado">
-                    
+                <tr>
+                    <td colspan="2">
+                        <div class="font16 centrado" v-html="encabezado">
+                        </div>
+                    </td>
                 </tr>
             </thead>
             <tbody>
                 <tr class="font14">
                     <td colspan="2">
-                        <div id="body" class="justificado" v-html="template">
+                        <div class="justificado centrado" v-html="template">
                         </div>
                     </td>
                 </tr>
@@ -17,7 +20,7 @@
             <tfoot>
                 <tr class="font13">
                     <th>
-                        <div class="justificado" v-html="pie">
+                        <div class="justificado centrado" v-html="pie">
                         </div>
                     </th>
                     <th>
@@ -46,7 +49,6 @@ const browser = detect();
                 info:[],
                 variables:[],
                 bloqueados:[],
-                logo:"http://gobiernoabierto.fiscaliaveracruz.gob.mx/img/logo.png",
                 token:''
             }
         },
@@ -219,7 +221,7 @@ const browser = detect();
     .noeditable{
         font-weight: bold;
     }
-    #body{
+    .centrado{
         margin-left: 50px;
         margin-right: 50px;
     }
