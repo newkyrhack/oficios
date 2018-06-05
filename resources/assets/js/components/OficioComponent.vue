@@ -2,11 +2,8 @@
     <div class="contenedor">
         <table class="editable" v-on:mouseover="editar" v-on:mouseout="fijo" >
             <thead>
-                <tr>
-                    <th>
-                        <div class="font16" v-html="encabezado" style="width:100%">
-                        </div>
-                    </th>
+                <tr class="font16" v-html="encabezado">
+                    
                 </tr>
             </thead>
             <tbody>

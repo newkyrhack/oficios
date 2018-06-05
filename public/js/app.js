@@ -16230,9 +16230,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 
@@ -18801,15 +18798,10 @@ var render = function() {
       },
       [
         _c("thead", [
-          _c("tr", [
-            _c("th", [
-              _c("div", {
-                staticClass: "font16",
-                staticStyle: { width: "100%" },
-                domProps: { innerHTML: _vm._s(_vm.encabezado) }
-              })
-            ])
-          ])
+          _c("tr", {
+            staticClass: "font16",
+            domProps: { innerHTML: _vm._s(_vm.encabezado) }
+          })
         ]),
         _vm._v(" "),
         _c("tbody", [
