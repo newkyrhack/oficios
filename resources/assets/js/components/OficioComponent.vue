@@ -1,7 +1,7 @@
 <template>
     <div class="contenedor">
         <table class="editable" v-on:mouseover="editar" v-on:mouseout="fijo" >
-            <thead>
+            <thead v-if="titulo">
                 <tr>
                     <td colspan="2">
                         <div class="font16 centrado" v-html="encabezado">
@@ -23,8 +23,9 @@
                         <div class="justificado centrado" v-html="pie">
                         </div>
                     </th>
-                    <th>
-                        <canvas ref="canvas" id="qr"></canvas>
+                    <th style="padding-right:50px; height:50px; overflow:hidden;">
+                        <canvas ref="canvas" id="qr" width="50" height="50" style="display:none" ></canvas>
+                        <img :src="myurl" alt="" width="80px;" style="float:right;">
                     </th>
                 </tr>
             </tfoot>
@@ -49,7 +50,8 @@ const browser = detect();
                 info:[],
                 variables:[],
                 bloqueados:[],
-                token:''
+                token:'',
+                myurl:''
             }
         },
          props:{
@@ -58,6 +60,12 @@ const browser = detect();
             },
             tipo: {
                 default:false
+            },
+            id:{
+                id:false
+            },
+            titulo:{
+                default:true
             }
         },
         mounted: function () {
@@ -66,7 +74,7 @@ const browser = detect();
         methods:{
             getTemplate: function(){
                 var urlTemplate = '../oficios';
-                var urlPeticion = this.url;
+                var urlPeticion = this.url+"/"+this.id;
                 axios.post(urlTemplate,{
                     tipo:this.tipo
                 }).then(response => {
@@ -155,14 +163,19 @@ const browser = detect();
                     axios.post("../getToken").then(response => {
                         this.token = response.data;
                         QRCode.toCanvas(this.$refs.canvas, this.token)
+                        var image = new Image();
+                        image.src = this.$refs.canvas.toDataURL("image/png");
+                        this.myurl = image.src;
                         axios.post("../saveOficio",{
                             "html" : $(".editable").html(),
                             "token": this.token,
                             "fiscal" : info['fiscal'],
                             "id_oficio": this.tipoOficio,
-                        }).then(response => {
+                            "id_tabla": this.id
+                        }).then(response => { 
                             window.print();
-                            this.$refs.canvas.width=this.$refs.canvas.width;
+                            this.myurl = '';
+                            //this.$refs.canvas.width=this.$refs.canvas.width;
                         });
                     });
                 }
@@ -171,10 +184,10 @@ const browser = detect();
                         "html" : $(".editable").html(),
                         "fiscal" : info['fiscal'],
                         "id_oficio": this.tipoOficio,
+                        "id_tabla": this.id
                     }).then(response => {
                     });
-                }
-                
+                }    
             }
        }
     }

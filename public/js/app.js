@@ -16233,6 +16233,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -16250,7 +16251,8 @@ var browser = detect();
             info: [],
             variables: [],
             bloqueados: [],
-            token: ''
+            token: '',
+            myurl: ''
         };
     },
 
@@ -16260,6 +16262,12 @@ var browser = detect();
         },
         tipo: {
             default: false
+        },
+        id: {
+            id: false
+        },
+        titulo: {
+            default: true
         }
     },
     mounted: function mounted() {
@@ -16270,7 +16278,7 @@ var browser = detect();
             var _this = this;
 
             var urlTemplate = '../oficios';
-            var urlPeticion = this.url;
+            var urlPeticion = this.url + "/" + this.id;
             axios.post(urlTemplate, {
                 tipo: this.tipo
             }).then(function (response) {
@@ -16358,21 +16366,27 @@ var browser = detect();
                 axios.post("../getToken").then(function (response) {
                     _this2.token = response.data;
                     __WEBPACK_IMPORTED_MODULE_0_qrcode___default.a.toCanvas(_this2.$refs.canvas, _this2.token);
+                    var image = new Image();
+                    image.src = _this2.$refs.canvas.toDataURL("image/png");
+                    _this2.myurl = image.src;
                     axios.post("../saveOficio", {
                         "html": $(".editable").html(),
                         "token": _this2.token,
                         "fiscal": info['fiscal'],
-                        "id_oficio": _this2.tipoOficio
+                        "id_oficio": _this2.tipoOficio,
+                        "id_tabla": _this2.id
                     }).then(function (response) {
                         window.print();
-                        _this2.$refs.canvas.width = _this2.$refs.canvas.width;
+                        _this2.myurl = '';
+                        //this.$refs.canvas.width=this.$refs.canvas.width;
                     });
                 });
             } else {
                 axios.post("../intentos", {
                     "html": $(".editable").html(),
                     "fiscal": info['fiscal'],
-                    "id_oficio": this.tipoOficio
+                    "id_oficio": this.tipoOficio,
+                    "id_tabla": this.id
                 }).then(function (response) {});
             }
         }
@@ -18799,16 +18813,18 @@ var render = function() {
         on: { mouseover: _vm.editar, mouseout: _vm.fijo }
       },
       [
-        _c("thead", [
-          _c("tr", [
-            _c("td", { attrs: { colspan: "2" } }, [
-              _c("div", {
-                staticClass: "font16 centrado",
-                domProps: { innerHTML: _vm._s(_vm.encabezado) }
-              })
+        _vm.titulo
+          ? _c("thead", [
+              _c("tr", [
+                _c("td", { attrs: { colspan: "2" } }, [
+                  _c("div", {
+                    staticClass: "font16 centrado",
+                    domProps: { innerHTML: _vm._s(_vm.encabezado) }
+                  })
+                ])
+              ])
             ])
-          ])
-        ]),
+          : _vm._e(),
         _vm._v(" "),
         _c("tbody", [
           _c("tr", { staticClass: "font14" }, [
@@ -18830,7 +18846,28 @@ var render = function() {
               })
             ]),
             _vm._v(" "),
-            _c("th", [_c("canvas", { ref: "canvas", attrs: { id: "qr" } })])
+            _c(
+              "th",
+              {
+                staticStyle: {
+                  "padding-right": "50px",
+                  height: "50px",
+                  overflow: "hidden"
+                }
+              },
+              [
+                _c("canvas", {
+                  ref: "canvas",
+                  staticStyle: { display: "none" },
+                  attrs: { id: "qr", width: "50", height: "50" }
+                }),
+                _vm._v(" "),
+                _c("img", {
+                  staticStyle: { float: "right" },
+                  attrs: { src: _vm.myurl, alt: "", width: "80px;" }
+                })
+              ]
+            )
           ])
         ])
       ]

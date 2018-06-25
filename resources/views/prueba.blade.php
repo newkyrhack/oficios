@@ -10,7 +10,7 @@
 </head>
 <body>
     <div id="app">
-        <oficio tipo="actas hechos" url="getoficioah/2"></oficio>
+        <oficio tipo="actas hechos" url="getoficioah" id="2" :titulo="false"></oficio>
     </div>
 </body>
 </html>
