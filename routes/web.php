@@ -16,3 +16,6 @@ Route::get('getoficioah/{id}', 'ActasHechosController@getoficioah');
 Route::post('getToken', 'OficioController@getToken')->name('getToken');
 Route::post('saveOficio', 'OficioController@saveOficio')->name('saveOficio');
 Route::post('intentos', 'OficioController@intentos')->name('intentos');
+Route::post('recuperar', 'OficioController@recuperar')->name('recuperar');
+Route::get('reimpresion', 'OficioController@reimpresion')->name('reimpresion');
+Route::post('recuperar_token', 'OficioController@recuperar_token')->name('recuperar_token');

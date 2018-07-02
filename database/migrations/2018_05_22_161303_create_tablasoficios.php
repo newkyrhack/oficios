@@ -23,7 +23,6 @@ class CreateTablasoficios extends Migration
         Schema::create('oficios', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
-            $table->string('sistema');
             $table->longText('encabezado');
             $table->longText('contenido');
             $table->longText('pie');
@@ -45,6 +44,7 @@ class CreateTablasoficios extends Migration
             $table->string('token');
             $table->string('fiscal');
             $table->integer('idOficio')->unsigned();
+            $table->integer('idTabla');
             $table->timestamps();
             $table->foreign('idOficio')->references('id')->on('oficios')->onDelete('restrict');            
         });
@@ -52,6 +52,7 @@ class CreateTablasoficios extends Migration
             $table->increments('id');
             $table->string('fiscal');
             $table->integer('idOficio')->unsigned();
+            $table->integer('idTabla');
             $table->longText('html');
             $table->timestamps();
 
@@ -66,9 +67,9 @@ class CreateTablasoficios extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('secciones_oficios');
+        //Schema::dropIfExists('secciones_oficios');
         Schema::dropIfExists('oficios');
-        Schema::dropIfExists('templates');
+        //Schema::dropIfExists('templates');
         Schema::dropIfExists('oficios_hechos');
         Schema::dropIfExists('intentos');
     }

@@ -1,34 +1,8 @@
 <template>
     <div class="contenedor">
-        <table class="editable">
-            <thead>
-                <tr>
-                    <td colspan="2">
-                        <div class="font16 centrado" v-html="encabezado">
-                        </div>
-                    </td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="font14">
-                    <td colspan="2">
-                        <div class="justificado centrado" v-html="template">
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr class="font13">
-                    <th>
-                        <div class="justificado centrado" v-html="pie">
-                        </div>
-                    </th>
-                    <th>
-                        <canvas ref="canvas" id="qr"></canvas>
-                    </th>
-                </tr>
-            </tfoot>
+        <table class="editable" v-html="contenido">
         </table>
+        <!-- <canvas ref="canvas"></canvas> -->
         <div id="imprimir">
             <input type="button" value="Imprimir" id="imprimir" class="impre btn btn-basic btn-outline-dark" v-on:click="imprimir"> 
         </div>
@@ -42,11 +16,7 @@ const browser = detect();
     export default {
         data(){
             return{
-                template:'',
-                encabezado:'',
-                pie:'',
-                tipoOficio:'',
-                info:[],
+                contenido:'',
                 token:''
             }
         },
@@ -56,6 +26,9 @@ const browser = detect();
             },
             id:{
                 id:false
+            },
+            token2:{
+                default:''
             }
         },
         mounted: function () {
@@ -63,44 +36,49 @@ const browser = detect();
         },
         methods:{
             getTemplate: function(){
-                var urlTemplate = '../oficios';
-                var urlPeticion = this.url+"/"+this.id;
-                axios.post(urlTemplate,{
-                    tipo:this.tipo
-                }).then(response => {
-                    if(response.data[0]==undefined){
-                        console.log("sin datos");
-                    }
-                    else{
-                        this.template = response.data[0]['contenido'];
-                        this.encabezado = response.data[0]['encabezado'];
-                        this.pie = response.data[0]['pie'];
-                        this.tipoOficio = response.data[0]['id'];
-                        axios.get(urlPeticion).then(response => {
-                            this.info = response.data;
-                        });
-                    }
-                });   
+                if(this.token2!=''){
+                    console.log("entro");
+                    var urlPeticion = "./recuperar_token";
+                    axios.post(urlPeticion,{
+                        token:this.token2
+                    }).then(response => {
+                        if(response.data==undefined){
+                            console.log("sin datos");
+                        }
+                        else{
+                            this.contenido = response.data.html;
+                            this.token = response.data.token;
+                        }
+                    });
+                }
+                else{
+                    console.log("entrooo");
+                    var urlPeticion = "./recuperar";
+                    axios.post(urlPeticion,{
+                        tipo:this.tipo,
+                        id:this.id
+                    }).then(response => {
+                        if(response.data==undefined){
+                            console.log("sin datos");
+                        }
+                        else{
+                            this.contenido = response.data.html;
+                            this.token = response.data.token;
+                        }
+                    });
+                }   
             },
             imprimir: function(){
-                let info = this.info;
-                this.variables.map(function(value,key){
-                    $("."+value).text(info[value]);
-                });
-                axios.post("../getToken").then(response => {
-                    this.token = response.data;
-                    QRCode.toCanvas(this.$refs.canvas, this.token)
-                    axios.post("../saveOficio",{
-                        "html" : $(".editable").html(),
-                        "token": this.token,
-                        "fiscal" : info['fiscal'],
-                        "id_oficio": this.tipoOficio,
-                        "id_tabla": this.id
-                    }).then(response => { 
-                        window.print();
-                        this.$refs.canvas.width=this.$refs.canvas.width;
-                    });
-                });
+                window.print();
+                // axios.post("./saveOficio",{
+                //     "html" : $(".editable").html(),
+                //     "token": this.token,
+                //     "fiscal" : info['fiscal'],
+                //     "id_oficio": this.tipoOficio,
+                //     "id_tabla": this.id
+                // }).then(response => { 
+                //     window.print();
+                // });
             }
        }
     }

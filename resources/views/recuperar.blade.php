@@ -10,7 +10,7 @@
 </head>
 <body>
     <div id="app">
-        <oficio tipo="actas hechos" url="getoficioah" id="2" :titulo="true"></oficio>
+        <reimpresion tipo="actas hechos" id="2" token2="RoAZvcrqLkJgxbBYPWSQnmiljzeOdT"></reimpresion>
     </div>
 </body>
 </html>

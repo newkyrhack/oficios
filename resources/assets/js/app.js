@@ -16,6 +16,7 @@ window.Vue = require('vue');
  */
 
 Vue.component('oficio', require('./components/OficioComponent.vue'));
+Vue.component('reimpresion', require('./components/ReimpresionComponent.vue'));
 
 const app = new Vue({
     el: '#app'

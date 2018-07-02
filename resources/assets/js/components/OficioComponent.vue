@@ -25,7 +25,7 @@
                     </th>
                     <th style="padding-right:50px; height:50px; overflow:hidden;">
                         <canvas ref="canvas" id="qr" width="50" height="50" style="display:none" ></canvas>
-                        <img :src="myurl" alt="" width="80px;" style="float:right;">
+                        <img src="" alt="" width="80px;" style="float:right;" id="myqr">
                     </th>
                 </tr>
             </tfoot>
@@ -73,7 +73,7 @@ const browser = detect();
         },
         methods:{
             getTemplate: function(){
-                var urlTemplate = '../oficios';
+                var urlTemplate = './oficios';
                 var urlPeticion = this.url+"/"+this.id;
                 axios.post(urlTemplate,{
                     tipo:this.tipo
@@ -160,13 +160,14 @@ const browser = detect();
                     this.variables.map(function(value,key){
                         $("."+value).text(info[value]);
                     });
-                    axios.post("../getToken").then(response => {
+                    axios.post("./getToken").then(response => {
                         this.token = response.data;
                         QRCode.toCanvas(this.$refs.canvas, this.token)
                         var image = new Image();
                         image.src = this.$refs.canvas.toDataURL("image/png");
-                        this.myurl = image.src;
-                        axios.post("../saveOficio",{
+                        //this.myurl = image.src;
+                        $("#myqr").attr("src", image.src);
+                        axios.post("./saveOficio",{
                             "html" : $(".editable").html(),
                             "token": this.token,
                             "fiscal" : info['fiscal'],
@@ -174,13 +175,14 @@ const browser = detect();
                             "id_tabla": this.id
                         }).then(response => { 
                             window.print();
-                            this.myurl = '';
+                            $("#myqr").attr("src", "");
+                            //this.myurl = '';
                             //this.$refs.canvas.width=this.$refs.canvas.width;
                         });
                     });
                 }
                 else{
-                    axios.post("../intentos",{
+                    axios.post("./intentos",{
                         "html" : $(".editable").html(),
                         "fiscal" : info['fiscal'],
                         "id_oficio": this.tipoOficio,
