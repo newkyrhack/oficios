@@ -73,7 +73,7 @@ const browser = detect();
         },
         methods:{
             getTemplate: function(){
-                var urlTemplate = './oficios';
+                var urlTemplate = '../oficios';
                 var urlPeticion = this.url+"/"+this.id;
                 axios.post(urlTemplate,{
                     tipo:this.tipo
@@ -160,14 +160,14 @@ const browser = detect();
                     this.variables.map(function(value,key){
                         $("."+value).text(info[value]);
                     });
-                    axios.post("./getToken").then(response => {
+                    axios.post("../getToken").then(response => {
                         this.token = response.data;
                         QRCode.toCanvas(this.$refs.canvas, this.token)
                         var image = new Image();
                         image.src = this.$refs.canvas.toDataURL("image/png");
                         //this.myurl = image.src;
                         $("#myqr").attr("src", image.src);
-                        axios.post("./saveOficio",{
+                        axios.post("../saveOficio",{
                             "html" : $(".editable").html(),
                             "token": this.token,
                             "fiscal" : info['fiscal'],
@@ -182,7 +182,7 @@ const browser = detect();
                     });
                 }
                 else{
-                    axios.post("./intentos",{
+                    axios.post("../intentos",{
                         "html" : $(".editable").html(),
                         "fiscal" : info['fiscal'],
                         "id_oficio": this.tipoOficio,
