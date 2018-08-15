@@ -1,6 +1,6 @@
 <template>
     <div class="contenedor">
-        <table class="editable" v-on:mouseover="editar" v-on:mouseout="fijo" >
+        <table class="editable" v-on:mouseover="editar" v-on:blur="fijo" >
             <thead v-if="titulo">
                 <tr>
                     <td colspan="2">
@@ -75,14 +75,11 @@ const browser = detect();
             getTemplate: function(){
                 var urlTemplate = '../oficios';
                 var urlPeticion = this.url+"/"+this.id;
-                axios.post(urlTemplate,{
-                    tipo:this.tipo
-                }).then(response => {
+                axios.get(urlTemplate+"/"+this.tipo).then(response => {
                     if(response.data[0]==undefined){
                         console.log("sin datos");
                     }
                     else{
-                        //console.log(response.data);
                         this.template = response.data[0]['contenido'];
                         this.encabezado = response.data[0]['encabezado'];
                         this.pie = response.data[0]['pie'];
@@ -196,7 +193,7 @@ const browser = detect();
 </script>
 <style>
     *{
-        font-family: "NeoSans";
+        font-family: 'neosanspro-regular';
     }
     body{
         background-color: #F0F0F0;
@@ -209,7 +206,8 @@ const browser = detect();
         border: 2px solid #E3E3E3;
     }
     .editable td, .editable th{
-        padding: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
     .font16{
         font-size: 16px;
@@ -246,9 +244,7 @@ const browser = detect();
     .negritas{
         font-weight: bold;
     }
-    .padding th{ 
-        padding: 20px 60px;
-    }
+    
     #imprimir{
         text-align: center;
         margin-top: 10px;

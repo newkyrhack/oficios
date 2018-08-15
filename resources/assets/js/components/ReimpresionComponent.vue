@@ -38,7 +38,7 @@ const browser = detect();
             getTemplate: function(){
                 if(this.token2!=''){
                     console.log("entro");
-                    var urlPeticion = "./recuperar_token";
+                    var urlPeticion = "../recuperar_token";
                     axios.post(urlPeticion,{
                         token:this.token2
                     }).then(response => {
@@ -53,7 +53,7 @@ const browser = detect();
                 }
                 else{
                     console.log("entrooo");
-                    var urlPeticion = "./recuperar";
+                    var urlPeticion = "../recuperar";
                     axios.post(urlPeticion,{
                         tipo:this.tipo,
                         id:this.id
