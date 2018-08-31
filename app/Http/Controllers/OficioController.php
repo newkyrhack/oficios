@@ -29,6 +29,8 @@ class OficioController extends Controller
         $oficio->fiscal = /*Auth::user()->id;*/ 1;
         $oficio->idOficio = $request->id_oficio;
         $oficio->idTabla = $request->id_tabla;
+        $oficio->numOficio = $request->numOficio;
+        $oficio->idCarpeta = $request->idCarpeta;
         if($oficio->save()){
             return 1;
         }
@@ -43,6 +45,8 @@ class OficioController extends Controller
         $intento->fiscal = /*Auth::user()->id;*/ 1;
         $intento->idOficio = $request->id_oficio;
         $intento->idTabla = $request->id_tabla;
+        $oficio->numOficio = $request->numOficio;
+        $oficio->idCarpeta = $request->idCarpeta;
         if($intento->save()){
             return 1;
         }

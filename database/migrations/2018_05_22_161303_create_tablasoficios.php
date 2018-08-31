@@ -45,6 +45,8 @@ class CreateTablasoficios extends Migration
             $table->string('fiscal');
             $table->integer('idOficio')->unsigned();
             $table->integer('idTabla');
+            $table->integer('idCarpeta');
+            $table->integer('numOficio');
             $table->timestamps();
             $table->foreign('idOficio')->references('id')->on('oficios')->onDelete('restrict');            
         });
@@ -53,6 +55,8 @@ class CreateTablasoficios extends Migration
             $table->string('fiscal');
             $table->integer('idOficio')->unsigned();
             $table->integer('idTabla');
+            $table->integer('idCarpeta');
+            $table->integer('numOficio');
             $table->longText('html');
             $table->timestamps();
 

@@ -1,8 +1,10 @@
 <template>
     <div class="contenedor">
-        <table class="editable" v-html="contenido">
+        <table v-if="validacion" class="editable" v-html="contenido">
         </table>
-        <!-- <canvas ref="canvas"></canvas> -->
+        <!-- <h1 v-if="!validacion">Prueba</h1> -->
+        <table v-if="!validacion" class="back" v-html="prueba">
+        </table>
         <div id="imprimir">
             <input type="button" value="Imprimir" id="imprimir" class="impre btn btn-basic btn-outline-dark" v-on:click="imprimir"> 
         </div>
@@ -17,7 +19,10 @@ const browser = detect();
         data(){
             return{
                 contenido:'',
-                token:''
+                respaldo:'',
+                token:'',
+                validacion:true,
+                prueba:''
             }
         },
          props:{
@@ -32,12 +37,26 @@ const browser = detect();
             }
         },
         mounted: function () {
-            this.getTemplate()
+            this.getTemplate();
+            
+        },
+        updated: function(){
+            this.clearCanvas();
+            this.fijo();
         },
         methods:{
+            clearCanvas: function(){
+                var html = '<canvas ref="canvas" id="qr" width="50" height="50" style="display:none" ></canvas><img src="" alt="" width="80px;" style="float:right;" id="myqr">';
+                $(".editable>tfoot>tr>#thqr").html(html);
+            },
+            fijo: function(){
+                $(".edt").removeAttr("contenteditable");
+                if(browser.name=='ie'||browser.name=='edge'){
+                    $("#body").addClass("justificado");
+                }  
+            },
             getTemplate: function(){
                 if(this.token2!=''){
-                    console.log("entro");
                     var urlPeticion = "../recuperar_token";
                     axios.post(urlPeticion,{
                         token:this.token2
@@ -47,12 +66,12 @@ const browser = detect();
                         }
                         else{
                             this.contenido = response.data.html;
+                            this.respaldo = response.data.html;
                             this.token = response.data.token;
                         }
                     });
                 }
                 else{
-                    console.log("entrooo");
                     var urlPeticion = "../recuperar";
                     axios.post(urlPeticion,{
                         tipo:this.tipo,
@@ -63,14 +82,50 @@ const browser = detect();
                         }
                         else{
                             this.contenido = response.data.html;
+                            this.respaldo = response.data.html;
                             this.token = response.data.token;
                         }
                     });
                 }   
             },
             imprimir: function(){
-                window.print();
-                // axios.post("./saveOficio",{
+                this.validacion = false;
+                var self = this
+                setTimeout(function(){
+                    self.prueba = self.respaldo
+                },100)
+
+                setTimeout(function(){
+                    window.print()
+                },200)
+
+                setTimeout(function(){
+                self.validacion = true;
+                self.prueba=''
+                },200)
+
+                // window.print();
+                // axios.post("../getToken").then(response => {
+                //     this.token = response.data;
+                //     QRCode.toCanvas($("#qr2"), this.token);
+                //     var image = new Image();
+                //     image.src = $("#qr2").toDataURL("image/png");
+                //     $("#myqr").attr("src", image.src);
+                //     axios.post("../saveOficio",{
+                //         "html" : $(".editable").html(),
+                //         "token": this.token,
+                //         "id_oficio": this.tipo,
+                //         "id_tabla": this.id
+                //     }).then(response => { 
+                //         window.print();
+                //         $("#myqr").attr("src", "");
+                //     })
+                //     .catch(error => {
+                //         console.log(error)
+                //     });
+                // });
+                // // window.print();
+                // axios.post("../saveOficio",{
                 //     "html" : $(".editable").html(),
                 //     "token": this.token,
                 //     "fiscal" : info['fiscal'],
@@ -90,14 +145,14 @@ const browser = detect();
     body{
         background-color: #F0F0F0;
     }
-    .editable{
+    .editable,.back{
         background-color: #ffffff;
         width: 80%;
         margin-left: auto;
         margin-right: auto;
         border: 2px solid #E3E3E3;
     }
-    .editable td, .editable th{
+    .editable td, .editable th, back td, back th{
         padding: 10px;
     }
     .font16{
@@ -149,7 +204,7 @@ const browser = detect();
     }
     @media print {
         .impre {display:none}
-        .editable{
+        .editable, .back{
             border: none;
             width: 100%;
         }

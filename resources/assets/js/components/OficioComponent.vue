@@ -23,7 +23,7 @@
                         <div class="justificado centrado" v-html="pie">
                         </div>
                     </th>
-                    <th style="padding-right:50px; height:50px; overflow:hidden;">
+                    <th style="padding-right:50px; height:50px; overflow:hidden;" id="thqr">
                         <canvas ref="canvas" id="qr" width="50" height="50" style="display:none" ></canvas>
                         <img src="" alt="" width="80px;" style="float:right;" id="myqr">
                     </th>
@@ -46,6 +46,7 @@ const browser = detect();
                 template:'',
                 encabezado:'',
                 pie:'',
+                html:'',
                 tipoOficio:'',
                 info:[],
                 variables:[],
@@ -66,6 +67,12 @@ const browser = detect();
             },
             titulo:{
                 default:true
+            },
+            idcarpeta:{
+                default:true
+            },
+            numoficio:{
+                default:true
             }
         },
         mounted: function () {
@@ -75,7 +82,7 @@ const browser = detect();
             getTemplate: function(){
                 var urlTemplate = '../oficios';
                 var urlPeticion = this.url+"/"+this.id;
-                axios.get(urlTemplate+"/"+this.tipo).then(response => {
+                axios.post(urlTemplate,{"tipo":this.tipo}).then(response => {
                     if(response.data[0]==undefined){
                         console.log("sin datos");
                     }
@@ -83,26 +90,30 @@ const browser = detect();
                         this.template = response.data[0]['contenido'];
                         this.encabezado = response.data[0]['encabezado'];
                         this.pie = response.data[0]['pie'];
+                        this.html = response.data[0]['encabezado']+response.data[0]['contenido']+response.data[0]['pie'];
                         this.tipoOficio = response.data[0]['id'];
                         axios.get(urlPeticion).then(response => {
                             this.info = response.data;
-                            this.setData();
+                            this.setDataEncabezado();
+                            this.setDataContenido();
+                            this.setDataPie();
                         });
-                    }
-                    
+                    }    
                 });   
             },
-            setData: function(){
-                var res = this.template.split("{{$");
-                var img = this.template.split("{{@");
-                let list=[];
+            setDataEncabezado: function(){
+                var res = this.encabezado.split("{{$");
+                var img = this.encabezado.split("{{@");
+                let list=this.variables;
+                let listSeccion = [];
                 let listimg=[];
-                let template = this.template;
+                let encabezado = this.encabezado;
                 let info = this.info;
                 res.map(function(value, key) {
                     if(key!=0){
                         var res2 = value.split("}}");
                         list.push(res2[0]);
+                        listSeccion.push(res2[0]);
                     }
                 });
                 img.map(function(value, key) {
@@ -111,18 +122,68 @@ const browser = detect();
                         listimg.push(img2[0]);
                     }
                 });
-                let protegidos=[];
+                let protegidos=this.bloqueados;
                 let tag = '';
-                list.map(function(value,key){
+                listSeccion.map(function(value,key){
                     if(protegidos.indexOf(value)!= -1){
-                        tag = value+"1";
+                        var contador = 1;
+                        while(protegidos.indexOf(value+contador)!= -1){
+                            contador++;
+                        }
+                        tag = value+contador;
                         protegidos.push(tag);
                     }
                     else{
                         tag = value;
                         protegidos.push(tag);
                     }
-                    template = template.replace("{{$"+value+"}}","</span> <span class='noeditable "+tag+"' id='"+tag+"'>"+info[value]+"</span> <span class='edt'>");
+                    encabezado = encabezado.replace("{{$"+value+"}}","</span> <span class='noeditable "+value+"' id='"+tag+"'>"+info[value]+"</span> <span class='edt'>");
+                });
+                listimg.map(function(value,key){
+                    encabezado = encabezado.replace("{{@"+value+"}}","<img src='"+info[value]+"'>");
+                });
+                encabezado = "<span class='edt'>"+encabezado+"</span>";
+                this.variables = list;
+                this.encabezado = encabezado;
+                this.bloqueados = protegidos;
+            },
+            setDataContenido: function(){
+                var res = this.template.split("{{$");
+                var img = this.template.split("{{@");
+                let list=this.variables;
+                let listSeccion = [];
+                let listimg=[];
+                let template = this.template;
+                let info = this.info;
+                res.map(function(value, key) {
+                    if(key!=0){
+                        var res2 = value.split("}}");
+                        list.push(res2[0]);
+                        listSeccion.push(res2[0]);
+                    }
+                });
+                img.map(function(value, key) {
+                    if(key!=0){
+                        var img2 = value.split("}}");
+                        listimg.push(img2[0]);
+                    }
+                });
+                let protegidos=this.bloqueados;
+                let tag = '';
+                listSeccion.map(function(value,key){
+                    if(protegidos.indexOf(value)!= -1){
+                        var contador = 1;
+                        while(protegidos.indexOf(value+contador)!= -1){
+                            contador++;
+                        }
+                        tag = value+contador;
+                        protegidos.push(tag);
+                    }
+                    else{
+                        tag = value;
+                        protegidos.push(tag);
+                    }
+                    template = template.replace("{{$"+value+"}}","</span> <span class='noeditable "+value+"' id='"+tag+"'>"+info[value]+"</span> <span class='edt'>");
                 });
                 listimg.map(function(value,key){
                     template = template.replace("{{@"+value+"}}","<img src='"+info[value]+"'>");
@@ -130,6 +191,52 @@ const browser = detect();
                 template = "<span class='edt'>"+template+"</span>";
                 this.variables = list;
                 this.template = template;
+                this.bloqueados = protegidos;
+            },
+            setDataPie: function(){
+                var res = this.pie.split("{{$");
+                var img = this.pie.split("{{@");
+                let list=this.variables;
+                let listSeccion = [];
+                let listimg=[];
+                let pie = this.pie;
+                let info = this.info;
+                res.map(function(value, key) {
+                    if(key!=0){
+                        var res2 = value.split("}}");
+                        list.push(res2[0]);
+                        listSeccion.push(res2[0]);
+                    }
+                });
+                img.map(function(value, key) {
+                    if(key!=0){
+                        var img2 = value.split("}}");
+                        listimg.push(img2[0]);
+                    }
+                });
+                let protegidos=this.bloqueados;
+                let tag = '';
+                listSeccion.map(function(value,key){
+                    if(protegidos.indexOf(value)!= -1){
+                        var contador = 1;
+                        while(protegidos.indexOf(value+contador)!= -1){
+                            contador++;
+                        }
+                        tag = value+contador;
+                        protegidos.push(tag);
+                    }
+                    else{
+                        tag = value;
+                        protegidos.push(tag);
+                    }
+                    pie = pie.replace("{{$"+value+"}}","</span> <span class='noeditable "+value+"' id='"+tag+"'>"+info[value]+"</span> <span class='edt'>");
+                });
+                listimg.map(function(value,key){
+                    pie = pie.replace("{{@"+value+"}}","<img src='"+info[value]+"'>");
+                });
+                pie = "<span class='edt'>"+pie+"</span>";
+                this.variables = list;
+                this.pie = pie;
                 this.bloqueados = protegidos;
             },
             editar: function(){
@@ -154,27 +261,33 @@ const browser = detect();
                     }  
                 });
                 if(correcto){
-                    this.variables.map(function(value,key){
-                        $("."+value).text(info[value]);
+                    this.bloqueados.map(function(value,key){
+                        var iden = value.substring(0,value.length-1);
+                        var ultimo = isNaN(value.charAt(value.length-1));
+                        if(ultimo){
+                            $("#"+value).text(info[value]);
+                        }
+                        else{
+                            $("#"+value).text(info[iden]);
+                        }
                     });
                     axios.post("../getToken").then(response => {
                         this.token = response.data;
                         QRCode.toCanvas(this.$refs.canvas, this.token)
                         var image = new Image();
                         image.src = this.$refs.canvas.toDataURL("image/png");
-                        //this.myurl = image.src;
                         $("#myqr").attr("src", image.src);
                         axios.post("../saveOficio",{
                             "html" : $(".editable").html(),
                             "token": this.token,
                             "fiscal" : info['fiscal'],
                             "id_oficio": this.tipoOficio,
-                            "id_tabla": this.id
+                            "id_tabla": this.id,
+                            "idCarpeta": this.idCarpeta,
+                            "numOficio": this.numOficio
                         }).then(response => { 
                             window.print();
                             $("#myqr").attr("src", "");
-                            //this.myurl = '';
-                            //this.$refs.canvas.width=this.$refs.canvas.width;
                         });
                     });
                 }
@@ -183,7 +296,9 @@ const browser = detect();
                         "html" : $(".editable").html(),
                         "fiscal" : info['fiscal'],
                         "id_oficio": this.tipoOficio,
-                        "id_tabla": this.id
+                        "id_tabla": this.id,
+                        "idCarpeta": this.idCarpeta,
+                        "numOficio": this.idOficio
                     }).then(response => {
                     });
                 }    

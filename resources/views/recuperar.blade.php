@@ -10,7 +10,7 @@
 </head>
 <body>
     <div id="app">
-        <reimpresion tipo="actas hechos" id="2" token2="RoAZvcrqLkJgxbBYPWSQnmiljzeOdT"></reimpresion>
+        <reimpresion tipo="actas hechos" id="" token2="OzexVwFZDSBvgsJLXphTktIrojWURY"></reimpresion>
     </div>
 </body>
 </html>
