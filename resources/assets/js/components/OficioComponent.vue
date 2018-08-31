@@ -283,8 +283,8 @@ const browser = detect();
                             "fiscal" : info['fiscal'],
                             "id_oficio": this.tipoOficio,
                             "id_tabla": this.id,
-                            "idCarpeta": this.idCarpeta,
-                            "numOficio": this.numOficio
+                            "idCarpeta": this.idcarpeta,
+                            "numOficio": this.numoficio
                         }).then(response => { 
                             window.print();
                             $("#myqr").attr("src", "");
@@ -297,8 +297,8 @@ const browser = detect();
                         "fiscal" : info['fiscal'],
                         "id_oficio": this.tipoOficio,
                         "id_tabla": this.id,
-                        "idCarpeta": this.idCarpeta,
-                        "numOficio": this.idOficio
+                        "idCarpeta": this.idcarpeta,
+                        "numOficio": this.numoficio
                     }).then(response => {
                     });
                 }    
