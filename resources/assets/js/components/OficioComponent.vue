@@ -69,7 +69,7 @@ const browser = detect();
                 default:true
             },
             idcarpeta:{
-                default:true
+                default: ""
             },
             numoficio:{
                 default:true
