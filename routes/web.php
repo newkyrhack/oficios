@@ -19,3 +19,4 @@ Route::post('intentos', 'OficioController@intentos')->name('intentos');
 Route::post('recuperar', 'OficioController@recuperar')->name('recuperar');
 Route::get('reimpresion', 'OficioController@reimpresion')->name('reimpresion');
 Route::post('recuperar_token', 'OficioController@recuperar_token')->name('recuperar_token');
+Route::get('tabla/{id}', 'ActasHechosController@tabla')->name('tabla');

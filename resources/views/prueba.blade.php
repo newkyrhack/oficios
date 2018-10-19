@@ -10,7 +10,7 @@
 </head>
 <body>
     <div id="app">
-        <oficio tipo="actas hechos" url="getoficioah" id="2" :titulo="true" :numoficio="123" :idcarpeta="456" ></oficio>
+        <oficio tipo="tabla" url="tabla" id="2" :titulo="true" :foot="false" :numoficio="123" :idcarpeta="456" ></oficio>
     </div>
 </body>
 </html>

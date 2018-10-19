@@ -15,7 +15,8 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('oficio', require('./components/OficioComponent.vue'));
+Vue.component('oficiov', require('./components/OficioComponent.vue'));
+Vue.component('oficioh', require('./components/OficioFinanzasComponent.vue'));
 Vue.component('reimpresion', require('./components/ReimpresionComponent.vue'));
 
 const app = new Vue({

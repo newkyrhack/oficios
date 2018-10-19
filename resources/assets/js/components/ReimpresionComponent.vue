@@ -57,7 +57,7 @@ const browser = detect();
             },
             getTemplate: function(){
                 if(this.token2!=''){
-                    var urlPeticion = "../recuperar_token";
+                    var urlPeticion = "recuperar_token";
                     axios.post(urlPeticion,{
                         token:this.token2
                     }).then(response => {
@@ -72,7 +72,7 @@ const browser = detect();
                     });
                 }
                 else{
-                    var urlPeticion = "../recuperar";
+                    var urlPeticion = "recuperar";
                     axios.post(urlPeticion,{
                         tipo:this.tipo,
                         id:this.id
@@ -105,13 +105,13 @@ const browser = detect();
                 },200)
 
                 // window.print();
-                // axios.post("../getToken").then(response => {
+                // axios.post("getToken").then(response => {
                 //     this.token = response.data;
                 //     QRCode.toCanvas($("#qr2"), this.token);
                 //     var image = new Image();
                 //     image.src = $("#qr2").toDataURL("image/png");
                 //     $("#myqr").attr("src", image.src);
-                //     axios.post("../saveOficio",{
+                //     axios.post("saveOficio",{
                 //         "html" : $(".editable").html(),
                 //         "token": this.token,
                 //         "id_oficio": this.tipo,
@@ -125,7 +125,7 @@ const browser = detect();
                 //     });
                 // });
                 // // window.print();
-                // axios.post("../saveOficio",{
+                // axios.post("saveOficio",{
                 //     "html" : $(".editable").html(),
                 //     "token": this.token,
                 //     "fiscal" : info['fiscal'],
@@ -147,13 +147,10 @@ const browser = detect();
     }
     .editable,.back{
         background-color: #ffffff;
-        width: 80%;
+        width: 612pt;
         margin-left: auto;
         margin-right: auto;
         border: 2px solid #E3E3E3;
-    }
-    .editable td, .editable th, back td, back th{
-        padding: 10px;
     }
     .font16{
         font-size: 16px;
@@ -206,11 +203,10 @@ const browser = detect();
         .impre {display:none}
         .editable, .back{
             border: none;
-            width: 100%;
         }
     }
     @page 
     {
-        size:  auto;   /* auto es el valor inicial */
+        size:  A4 !important;
     }
 </style>

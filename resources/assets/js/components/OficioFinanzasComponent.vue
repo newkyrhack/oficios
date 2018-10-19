@@ -17,15 +17,11 @@
                     </td>
                 </tr>
             </tbody>
-            <tfoot>
+            <tfoot v-if="foot">
                 <tr class="font13">
                     <th>
                         <div class="justificado centrado" v-html="pie">
                         </div>
-                    </th>
-                    <th style="padding-right:50px; height:50px; overflow:hidden;" id="thqr">
-                        <canvas ref="canvas" id="qr" width="50" height="50" style="display:none" ></canvas>
-                        <img src="" alt="" width="80px;" style="float:right;" id="myqr">
                     </th>
                 </tr>
             </tfoot>
@@ -37,7 +33,6 @@
 </template>
 
 <script>
-import QRCode from 'qrcode'
 const { detect } = require('detect-browser');
 const browser = detect();
     export default {
@@ -72,6 +67,9 @@ const browser = detect();
                 default: ""
             },
             numoficio:{
+                default:true
+            },
+            foot:{
                 default:true
             }
         },
@@ -261,22 +259,18 @@ const browser = detect();
                     }  
                 });
                 if(correcto){
-                    this.bloqueados.map(function(value,key){
-                        var iden = value.substring(0,value.length-1);
-                        var ultimo = isNaN(value.charAt(value.length-1));
-                        if(ultimo){
-                            $("#"+value).html(info[value]);
-                        }
-                        else{
-                            $("#"+value).html(info[iden]);
-                        }
-                    });
+                    // this.bloqueados.map(function(value,key){
+                    //     var iden = value.substring(0,value.length-1);
+                    //     var ultimo = isNaN(value.charAt(value.length-1));
+                    //     if(ultimo){
+                    //         $("#"+value).html(info[value]);
+                    //     }
+                    //     else{
+                    //         $("#"+value).html(info[iden]);
+                    //     }
+                    // });
                     axios.post("getToken").then(response => {
                         this.token = response.data;
-                        QRCode.toCanvas(this.$refs.canvas, this.token)
-                        var image = new Image();
-                        image.src = this.$refs.canvas.toDataURL("image/png");
-                        $("#myqr").attr("src", image.src);
                         axios.post("saveOficio",{
                             "html" : $(".editable").html(),
                             "token": this.token,
@@ -287,7 +281,6 @@ const browser = detect();
                             "numOficio": this.numoficio
                         }).then(response => { 
                             window.print();
-                            $("#myqr").attr("src", "");
                         });
                     });
                 }
@@ -315,7 +308,6 @@ const browser = detect();
     }
     .editable{
         background-color: #ffffff;
-        width: 612pt;
         margin-left: auto;
         margin-right: auto;
         border: 2px solid #E3E3E3;
@@ -371,6 +363,6 @@ const browser = detect();
         }
     }
     @page {
-        size:  A4 !important;
+        size: landscape; 
     }
 </style>
