@@ -71,14 +71,27 @@ const browser = detect();
             },
             foot:{
                 default:true
+            },
+            nivel:{
+                default:0
             }
         },
         mounted: function () {
+            this.generarUrl()
             this.getTemplate()
         },
         methods:{
+            generarUrl: function(){
+                if(this.nivel!=0){
+                    var contador = 0;
+                    while(contador<this.nivel){
+                        this.myurl += "../"
+                        contador++
+                    }
+                }
+            },
             getTemplate: function(){
-                var urlTemplate = 'oficios';
+                var urlTemplate = this.myurl+'oficios';
                 var urlPeticion = this.url+"/"+this.id;
                 axios.post(urlTemplate,{"tipo":this.tipo}).then(response => {
                     if(response.data[0]==undefined){
@@ -269,9 +282,9 @@ const browser = detect();
                     //         $("#"+value).html(info[iden]);
                     //     }
                     // });
-                    axios.post("getToken").then(response => {
+                    axios.post(this.myurl+"getToken").then(response => {
                         this.token = response.data;
-                        axios.post("saveOficio",{
+                        axios.post(this.myurl+"saveOficio",{
                             "html" : $(".editable").html(),
                             "token": this.token,
                             "fiscal" : info['fiscal'],
@@ -285,7 +298,7 @@ const browser = detect();
                     });
                 }
                 else{
-                    axios.post("intentos",{
+                    axios.post(this.myurl+"intentos",{
                         "html" : $(".editable").html(),
                         "fiscal" : info['fiscal'],
                         "id_oficio": this.tipoOficio,
@@ -308,6 +321,7 @@ const browser = detect();
     }
     .editable{
         background-color: #ffffff;
+        width: 792pt;
         margin-left: auto;
         margin-right: auto;
         border: 2px solid #E3E3E3;

@@ -73,14 +73,27 @@ const browser = detect();
             },
             numoficio:{
                 default:true
+            },
+            nivel:{
+                default:0
             }
         },
         mounted: function () {
+            this.generarUrl()
             this.getTemplate()
         },
         methods:{
+            generarUrl: function(){
+                if(this.nivel!=0){
+                    var contador = 0;
+                    while(contador<this.nivel){
+                        this.myurl += "../"
+                        contador++
+                    }
+                }
+            },
             getTemplate: function(){
-                var urlTemplate = 'oficios';
+                var urlTemplate = this.myurl+'oficios';
                 var urlPeticion = this.url+"/"+this.id;
                 axios.post(urlTemplate,{"tipo":this.tipo}).then(response => {
                     if(response.data[0]==undefined){
@@ -271,13 +284,13 @@ const browser = detect();
                             $("#"+value).html(info[iden]);
                         }
                     });
-                    axios.post("getToken").then(response => {
+                    axios.post(this.myurl+"getToken").then(response => {
                         this.token = response.data;
                         QRCode.toCanvas(this.$refs.canvas, this.token)
                         var image = new Image();
                         image.src = this.$refs.canvas.toDataURL("image/png");
                         $("#myqr").attr("src", image.src);
-                        axios.post("saveOficio",{
+                        axios.post(this.myurl+"saveOficio",{
                             "html" : $(".editable").html(),
                             "token": this.token,
                             "fiscal" : info['fiscal'],
@@ -292,7 +305,7 @@ const browser = detect();
                     });
                 }
                 else{
-                    axios.post("intentos",{
+                    axios.post(this.myurl+"intentos",{
                         "html" : $(".editable").html(),
                         "fiscal" : info['fiscal'],
                         "id_oficio": this.tipoOficio,

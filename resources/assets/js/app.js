@@ -17,8 +17,8 @@ window.Vue = require('vue');
 
 Vue.component('oficiov', require('./components/OficioComponent.vue'));
 Vue.component('oficioh', require('./components/OficioFinanzasComponent.vue'));
-Vue.component('reimpresion', require('./components/ReimpresionComponent.vue'));
-
+Vue.component('reimpresionv', require('./components/ReimpresionComponent.vue'));
+Vue.component('reimpresionh', require('./components/ReimpresionFinanzasComponent.vue'));
 const app = new Vue({
     el: '#app'
 });
