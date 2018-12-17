@@ -22,7 +22,8 @@ const browser = detect();
                 respaldo:'',
                 token:'',
                 validacion:true,
-                prueba:''
+                prueba:'',
+                myurl:''
             }
         },
          props:{
@@ -34,6 +35,9 @@ const browser = detect();
             },
             token2:{
                 default:''
+            },
+            nivel:{
+                default:0
             }
         },
         mounted: function () {
@@ -45,6 +49,15 @@ const browser = detect();
             this.fijo();
         },
         methods:{
+            generarUrl: function(){
+                if(this.nivel!=0){
+                    var contador = 0;
+                    while(contador<this.nivel){
+                        this.myurl += "../"
+                        contador++
+                    }
+                }
+            },
             clearCanvas: function(){
                 var html = '<canvas ref="canvas" id="qr" width="50" height="50" style="display:none" ></canvas><img src="" alt="" width="80px;" style="float:right;" id="myqr">';
                 $(".editable>tfoot>tr>#thqr").html(html);
@@ -57,7 +70,7 @@ const browser = detect();
             },
             getTemplate: function(){
                 if(this.token2!=''){
-                    var urlPeticion = "recuperar_token";
+                    var urlPeticion = this.myurl+"recuperar_token";
                     axios.post(urlPeticion,{
                         token:this.token2
                     }).then(response => {
@@ -72,7 +85,7 @@ const browser = detect();
                     });
                 }
                 else{
-                    var urlPeticion = "recuperar";
+                    var urlPeticion = this.myurl+"recuperar";
                     axios.post(urlPeticion,{
                         tipo:this.tipo,
                         id:this.id

@@ -278,10 +278,10 @@ const browser = detect();
                         var iden = value.substring(0,value.length-1);
                         var ultimo = isNaN(value.charAt(value.length-1));
                         if(ultimo){
-                            $("#"+value).html(info[value]);
+                            $("#"+value).replaceWith(info[value]);
                         }
                         else{
-                            $("#"+value).html(info[iden]);
+                            $("#"+value).replaceWith(info[iden]);
                         }
                     });
                     axios.post(this.myurl+"getToken").then(response => {
@@ -384,6 +384,6 @@ const browser = detect();
         }
     }
     @page {
-        size:  A4 !important;
+        size:  letter !important;
     }
 </style>
