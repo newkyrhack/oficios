@@ -1,5 +1,5 @@
 <template>
-    <div class="contenedor">
+    <div v-if="cargando===false" class="contenedor">
         <table class="editable" v-on:mouseover="editar" v-on:blur="fijo" >
             <thead v-if="titulo">
                 <tr>
@@ -34,10 +34,16 @@
             <input type="button" value="Imprimir" id="imprimir" class="impre btn btn-basic btn-outline-dark" v-on:click="imprimir"> 
         </div>
     </div>
+    <div v-else class="container-fluid" style="background-color:white;height:100vh;">
+        <atom-spinner class="centrar" :animation-duration="1500" :size="80" :color="'#828282'" />
+    </div>
 </template>
 
 <script>
 import QRCode from 'qrcode'
+import {
+    AtomSpinner 
+} from 'epic-spinners'
 const { detect } = require('detect-browser');
 const browser = detect();
     export default {
@@ -52,9 +58,13 @@ const browser = detect();
                 variables:[],
                 bloqueados:[],
                 token:'',
+                cargando:true,
                 myurl:''
             }
         },
+        components: {
+			AtomSpinner
+		},
          props:{
             url: {
                 default:false
@@ -110,7 +120,19 @@ const browser = detect();
                             this.setDataEncabezado();
                             this.setDataContenido();
                             this.setDataPie();
-                        });
+                            this.cargando=false
+                        })
+                        .catch(error=>{
+                            swal({
+								title: 'Formato no disponible',
+								text: 'No fue posible cargar el formato en este momento.',
+								type: 'error',
+                                confirmButtonText: 'Entendido',
+                                onClose: () => {
+                                    window.close()
+                                }
+							})
+                        })
                     }    
                 });   
             },
@@ -385,5 +407,17 @@ const browser = detect();
     }
     @page {
         size:  letter !important;
+    }
+    .centrar {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        /* margin-top: 10px !important; */
+        margin-bottom: 12px !important;
+        margin-left: -45px;
+        margin-top: -65px;
+    }
+    body{
+        background-color: white;
     }
 </style>

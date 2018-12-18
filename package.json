@@ -21,7 +21,9 @@
     },
     "dependencies": {
         "detect-browser": "^2.5.1",
+        "epic-spinners": "^1.0.4",
         "es6-promise": "^4.2.4",
-        "qrcode": "^1.2.0"
+        "qrcode": "^1.2.0",
+        "sweetalert2": "^7.32.4"
     }
 }
