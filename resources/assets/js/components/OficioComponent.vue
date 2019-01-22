@@ -382,6 +382,10 @@ const browser = detect();
         .editable{
             border: none;
         }
+        .centrado{
+            margin-left: 0px;
+            margin-right: 0px;
+        }
     }
     @page {
         size:  letter !important;
